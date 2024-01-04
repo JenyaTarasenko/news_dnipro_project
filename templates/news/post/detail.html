@@ -121,4 +121,22 @@
     </section>
 
 
+{% with comments.count as total_comments %}
+    <h2>
+      {{ total_comments }} comment {{ total_comments|pluralize }}
+    </h2>
+{% endwith %}
+  {% for comment in comments %}
+      comment {{ forloop.counter }} by {{ comment.name }}
+              {{ comment.created }}
+  {{ comment.body|linebreaks }}
+
+
+  {% empty %}
+    <p> No comment</p>
+  {% endfor %}
+
+  {% include 'news/post/includes/comment_form.html' %}
+
+
 {% endblock %}

@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from datetime import datetime, timedelta
+from django.contrib.auth.models import User
 
 
 class Category(models.Model):
@@ -13,6 +14,10 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+
+
+
 
 
 
@@ -39,6 +44,7 @@ class  News(models.Model):
     categories = models.ManyToManyField(Category)
     status = models.CharField(max_length=2, choices=Status.choices,
                               default=Status.DRAFT)
+
 
     @classmethod
     def get_news_of_the_week(cls, count=5):
@@ -87,4 +93,36 @@ class  News(models.Model):
 
 
 
+class Comment(models.Model):
+    """
+    Модель для коментариев зарегестрированных пользователей
+    """
+    post = models.ForeignKey('News', on_delete=models.CASCADE, related_name='comments')#каждый коментарий к одному посту и пост будет содержать множество коментариев
+    name = models.CharField(max_length=100)
+    text = models.CharField(max_length=200, default=None, null=True, blank=True)
+    email = models.EmailField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)#поле активности коментариев
+
+
+    class Meta:
+        ordering = ['created']#для сортировки коментариев
+        indexes = [
+            models.Index(fields=['created']),#для индексации коментариев в возрастающем порядке
+        ]
+
+    def __str__(self):
+        return f'Коментарии от{self.name} для{self.text}'
+
+
+class UserProfile(models.Model):
+    """
+    модель регистрации пользователя
+    """
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=100, blank=True)
+    last_name = models.CharField(max_length=100, blank=True)
+    bio = models.TextField(blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True)
 
