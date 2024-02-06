@@ -13,7 +13,9 @@ urlpatterns = [
     # path('category/<int:category_id>/', views.detail_category, name='category_posts'),
     # path('news/<int:year>/<int:month>/<int:day>/<slug:news>/', views.post_comment, name='post_comment'),#коментарии
     path('comment/<int:news_id>/', views.post_comment, name='post_comment'),
-    path('register/', views.register, name='register'),#регистрация пользователя
+    path('category/<slug:category_slug>/', views.category_news_detail, name='detail_category'),#детальная информация категории
+    # path('registration/', views.register_view, name='registration'),#регистрация пользователя
+    # path('search/<slug:category_slug>', views.news_search, name='search_news'),
 ]
 
 

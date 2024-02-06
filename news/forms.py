@@ -2,6 +2,11 @@ from .models import Comment, UserProfile
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import AuthenticationForm
+
+
+
+
 
 class EmailPostForm(forms.Form):
     name = forms.CharField(max_length=25)
@@ -32,9 +37,6 @@ class RegistrationForm(UserCreationForm):
         ]
 
 
-class UserProfileForm(forms.ModelForm):
-        class Meta:
-            model = UserProfile
-            fields = [
-                'first_name', 'last_name', 'bio', 'profile_picture'
-            ]
+
+class NewsSearchForm(forms.Form):
+    search_query = forms.CharField(label='Поиск по заголовку', max_length=100)

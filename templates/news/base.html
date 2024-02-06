@@ -48,9 +48,9 @@
       <div class="container">
         <div class="row">
           <div class="col-12">
-            <a href="#" class="text-white"><span class="mr-2 text-white icon-envelope-open-o"></span> <span class="d-none d-md-inline-block"> dnipro-news.com</span></a>
+            <a href="" class="text-white"><span class="mr-2 text-white icon-envelope-open-o"></span> <span class="d-none d-md-inline-block"> dnipro-news.com</span></a>
             <span class="mx-md-2 d-inline-block"></span>
-            <a href="#" class="text-white"><span class="mr-2 text-white icon-phone"></span> <span class="d-none d-md-inline-block">+3 (099) 607 29 79</span></a>
+            <a href="" class="text-white"><span class="mr-2 text-white icon-phone"></span> <span class="d-none d-md-inline-block">+3 (099) 607 29 79</span></a>
 
 
             <div class="float-right">
@@ -84,7 +84,7 @@
                 <ul class="site-menu main-menu js-clone-nav ml-auto d-none d-lg-block">
                 <li><a href="{% url 'news:list_view' %}" class="nav-link">Главная</a></li>
                 <li><a href="#services-section" class="nav-link">О нас</a></li>
-                <li><a href="#press-section" class="nav-link">Блог</a></li>
+                <li><a href="" class="nav-link">Блог</a></li>
                 <li><a href="#testimonials-section" class="nav-link">Контакты</a></li>
               </ul>
               </nav>
@@ -100,9 +100,16 @@
     {% block content %}
 
 
+      {% with comments.count as total_comments %}
+      <h2>
+        {{ total_comments }} comment{{ total_comments|pluralize }}
+      </h2>
+      {% endwith %}
+
     {% endblock %}
 
-    {% include "news/post/includes/comment_form.html" %}
+
+
 
     <footer class="site-footer">
       <div class="container">
@@ -111,17 +118,14 @@
             <div class="row">
               <div class="col-md-8">
                 <h2 class="footer-heading mb-4">About Us</h2>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque facere laudantium magnam voluptatum autem. Amet aliquid nesciunt veritatis aliquam.</p>
+                <p>Этот портал о новостях города Днепр актуальных которые сейчас</p>
               </div>
               <div class="col-md-4 ml-auto">
-                <h2 class="footer-heading mb-4">Features</h2>
+                <h2 class="footer-heading mb-4">Главная</h2>
                 <ul class="list-unstyled">
-                  <li><a href="#">About Us</a></li>
-                  <li><a href="#">Press Releases</a></li>
-                  <li><a href="#">Testimonials</a></li>
-                  <li><a href="#">Terms of Service</a></li>
-                  <li><a href="#">Privacy</a></li>
-                  <li><a href="#">Contact Us</a></li>
+                  <li><a href="#">О нас</a></li>
+                  <li><a href="">Регистрация</a></li>
+                  <li><a href="#">Контакты</a></li>
                 </ul>
               </div>
 

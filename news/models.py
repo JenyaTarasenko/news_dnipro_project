@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.utils import timezone
 from datetime import datetime, timedelta
 from django.contrib.auth.models import User
+from taggit.managers import TaggableManager
 
 
 class Category(models.Model):
@@ -35,6 +36,7 @@ class  News(models.Model):
         PUBLISHED = 'pb', 'Published'
 
     title = models.CharField(max_length=250)
+    tags = TaggableManager()#тегирование
     slug = models.SlugField(max_length=250, unique_for_date='publish')#уникальные дата и время для вывода слагов статтей
     body = models.TextField()
     publish = models.DateTimeField(default=timezone.now)

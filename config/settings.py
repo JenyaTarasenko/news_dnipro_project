@@ -27,8 +27,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'news.apps.NewsConfig'# news-apps neme
+    'news.apps.NewsConfig', #news-apps
+    'taggit', #теггирование
+
+
 ]
+
+
+# CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -116,3 +124,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')#ранение картинок
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = 'news:list_view'
+

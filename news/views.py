@@ -1,10 +1,14 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Category, News, Comment
+from .models import Category, News, Comment, UserProfile
 
-from .forms import CommentForm, RegistrationForm, UserProfileForm
+from .forms import CommentForm, RegistrationForm, NewsSearchForm
 
 from django.views.decorators.http import require_POST
 from django.contrib.auth import login
+
+from django.views.generic import View
+from django.views.generic import CreateView
+
 
 
 
@@ -24,7 +28,8 @@ def list_view(request):
                    'top_news': top_news,
                    'latest_news': latest_news,
                    'news_page ': news_page,
-                   'cat': cat})
+                   'cat': cat}
+                  )
 
 
 
@@ -40,29 +45,62 @@ def detail_views(request, year, month,day, news):
                              publish__year=year,
                              publish__month=month,
                              publish__day=day)
+
     category_detail = new_detail.categories.all()#выводит все категории детально
+    category_all = Category.objects.all()
     related_news = new_detail.get_related_news()#метод для вывода похожих ровостей по категории
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.post = new_detail
+            new_comment.save()
+            return redirect('news:news_detail', year=year, month=month, day=day, news=news)
+    else:
+        comment_form = CommentForm()
     comments = new_detail.comments.filter(active=True)
-    form = CommentForm()
+
     return render(request, 'news/post/detail.html',
                   {'new_detail': new_detail,
                    'category_detail': category_detail,
                    'related_news': related_news,
                    'comments': comments,
-                   'form': form}
+                   'comment_form': comment_form,
+                   'category_all': category_all}
                   )
 
 
 
 
-def detail_category(request, category_id):
+def category_news_detail(request, category_slug):
     """
-      детальная информация категорий вывод новостей по категории
-      """
-    category = Category.objects.get(pk=category_id)
-    posts = category.news_set.all()
-    return render(request, 'post/category_posts.html',
-                  {'posts': posts})
+    детальная информация по связанным категориям
+    """
+    category = get_object_or_404(Category, slug=category_slug)
+    news_list = News.objects.filter(categories=category)
+
+    form = NewsSearchForm(request.GET)
+    if form.is_valid():
+        search_query = form.cleaned_data['search_query']
+        # Разбиваем введенную строку на слова
+        search_words = search_query.split()
+
+        # Для каждого слова добавляем фильтр
+        for word in search_words:
+            news_list = news_list.filter(title__icontains=word)
+
+    if request.method == 'POST':
+        user_form = RegistrationForm(request.POST)
+        if user_form.is_valid():
+            user = user_form.save()
+            return redirect('news:list_view')
+    else:
+        user_form = RegistrationForm()
+    return render(request, 'news/post/category_detail.html',
+                  {'category': category, 'news_list': news_list, 'user_form': user_form, 'search_form': form}
+                  )
+
+
 
 
 @require_POST
@@ -85,30 +123,56 @@ def post_comment(request, news_id):
                   )
 
 
+# @require_POST
+# def post_comment(request, news_id):
+#     news = get_object_or_404(News, id=news_id, status=News.Status.PUBLISHED)
+#     comment = None
+#     form = CommentForm(data=request.POST)
+#     try:
+#         if form.is_valid():
+#             comment = form.save(commit=False)
+#             comment.news = news
+#             comment.save()
+#         else:
+#             raise ValueError('Form is valid')
+#     except ValueError as e:
+#         print(f'Error:{e}')
+#         print(form.errors)
+#     return render(request, 'news/post/comment.html',
+#                       {'news': news, 'form': form, 'comment': comment})
 
-
-def register(request):
-    """
-    Регистрация
-    """
-    if request.method == 'POST':
-        user_form = RegistrationForm(request.POST)
-        profile_form = UserProfileForm(request.POST, request.FILES)
-
-        if user_form.is_valid() and profile_form.is_valid():
-            user = user_form.save()
-            profile = profile_form.save(commit=False)
-            profile.user = user
-            profile.save()
-            login(request, user)
-            return redirect('news/post/list.html')
-
-        else:
-            user_form = RegistrationForm()
-            profile_form = UserProfileForm()
-
-        return render(request, 'news/post/registration.html',
-                      {'user_form': user_form,
-                       'profile_form': profile_form}
-                      )
+# def register_view(request):
+#     """
+#     Регистрация
+#     """
+#     if request.method == 'POST':
+#         user_form = RegistrationForm(request.POST)
+#         if user_form.is_valid():
+#             user = user_form.save()
+#             return redirect('news:list_view')
+#     else:
+#         user_form = RegistrationForm()
+#
+#     return render(request, 'news/post/registration/registration.html',
+#                   {'user_form': user_form}
+#                   )
+# def news_search(request, category_slug):
+#     """
+#     Поиск по словам и заголовкам новсти
+#     """
+#     category = get_object_or_404(Category, slug=category_slug)
+#     news_list =  News.objects.filter(categories=category)
+#
+#     form =NewsSearchForm(request.GET)
+#     if form.is_valid():
+#         search_query = form.cleaned_data['search_query']
+#         # Разбиваем введенную строку на слова
+#         news_words = search_query.split()
+#
+#         # Для каждого слова добавляем фильтр
+#         for word in news_words:
+#             news_list = news_list.filte(title__icontains=word)
+#     return render(request,
+#                   'news/post/page_1.html',
+#                   {'category': category, 'news_list': news_list, 'form': form})
 
