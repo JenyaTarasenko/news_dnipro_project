@@ -127,3 +127,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = 'news:list_view'
 
+ALLOWED_HOSTS = ['news-dnipro.onrender.com', 'localhost', '127.0.0.1']
+
+
