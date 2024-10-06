@@ -5,8 +5,8 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('news/', include('news.urls', namespace='news')),
-    path('', include('news.urls')),  # Перенаправление корневого URL на приложение news
+    path('', include('news.urls', namespace='news')),
+    
 ]
 
 
