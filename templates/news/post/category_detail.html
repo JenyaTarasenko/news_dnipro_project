@@ -1,0 +1,44 @@
+{% extends 'news/base.html' %}
+
+{% block content %}
+ <section class="site-section bg-light" id="pricing-section">
+      <div class="container">
+        <div class="row site-section" id="faq-section">
+          <div class="col-12 text-center" data-aos="fade">
+            <h2 class="section-title text-primary">{{ category.name }}</h2>
+            <p>Новости выбранной категории</p>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6">
+           {% for item_news in  news_list%}
+                <div class="mb-5" data-aos="fade-up" data-aos-delay="100">
+                <a href="{{ item_news.get_absolute_url }}"><h3 class="text-black h4 mb-4">{{ item_news.title}}</h3></a>
+                <p>{{  item_news.body }}</p>
+                </div>
+           {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+ <section>
+     <form method="get" action="{% url 'news:detail_category' category_slug=category.slug %}">
+             {{ search_form.as_p }}
+        <button type="submit">Искать новость</button>
+     </form>
+<!--     {% if news_list %}-->
+<!--         <h3>Result</h3>-->
+<!--     <ul>-->
+<!--         {% for news in news_list %}-->
+<!--             <li>{{ news.title }}</li>-->
+<!--         {% endfor %}-->
+<!--     </ul>-->
+<!--     {% else %}-->
+<!--         <p>No news</p>-->
+<!--     {% endif %}-->
+
+ </section>
+
+
+{% endblock %}

@@ -1,0 +1,33 @@
+
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: myproject
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8001:8000"  # Проброс порта 8001 хоста на порт 8000 контейнера
+    depends_on:
+      - db
+    environment:
+      - DB_NAME=myproject
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - DB_HOST=db
+      - DB_PORT=5432
+   
+
+volumes:
+  postgres_data:

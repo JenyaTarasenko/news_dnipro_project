@@ -1,0 +1,9 @@
+{% extends 'news/base.html' %}
+
+{% block content %}
+<form method="get" action="{% url 'news:search_news' category_slug=category.slug %}">
+    {{ form.as_p }}
+    <button type="submith">Искать новость</button>
+</form>
+
+{% endblock %}
