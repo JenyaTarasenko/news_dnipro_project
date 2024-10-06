@@ -8,7 +8,8 @@ RUN apt-get update && apt-get install -y postgresql-client && rm -rf /var/lib/ap
 WORKDIR /app
 
 # Копируем файл зависимостей в контейнер
-COPY requirements.txt /app/
+COPY config/requirements.txt /app/
+
 
 # Устанавливаем зависимости
 RUN pip install --no-cache-dir -r requirements.txt
