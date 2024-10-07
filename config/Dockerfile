@@ -9,6 +9,11 @@ WORKDIR /app
 
 # Копируем файл зависимостей в контейнер
 COPY config/requirements.txt /app/
+# Запуск команды collectstatic
+RUN python manage.py collectstatic --noinput
+
+# Добавьте статические файлы в контейнер
+COPY ./staticfiles /app/staticfiles
 
 
 # Устанавливаем зависимости
