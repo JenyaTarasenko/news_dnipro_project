@@ -22,7 +22,7 @@ COPY . /app/
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Запуск команды collectstatic
-RUN python manage.py collectstatic --noinput 
+# RUN python manage.py collectstatic --noinput 
 
 # Открываем порт 8000 для внешнего доступа
 EXPOSE 8000
