@@ -8,18 +8,19 @@ RUN apt-get update && apt-get install -y postgresql-client && rm -rf /var/lib/ap
 WORKDIR /app
 
 # Копируем файл зависимостей в контейнер
-COPY  config/requirements.txt /app/
-
-
-# Добавьте статические файлы в контейнер
-# COPY ./staticfiles /app/staticfiles
-
+COPY requirements.txt /app/
 
 # Устанавливаем зависимости
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Копируем весь проект в контейнер
 COPY . /app/
+
+# Добавляем WhiteNoise для статических файлов
+# Убедитесь, что WhiteNoise добавлен в requirements.txt
+# Убедитесь, что в settings.py у вас настроен WhiteNoise
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 # Запуск команды collectstatic
 RUN python manage.py collectstatic --noinput 
 
@@ -27,4 +28,5 @@ RUN python manage.py collectstatic --noinput
 EXPOSE 8000
 
 # Команда для запуска сервера Django
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Лучше использовать gunicorn для продакшн-окружения
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application"]
