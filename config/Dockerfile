@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y postgresql-client && rm -rf /var/lib/ap
 WORKDIR /app
 
 # Копируем файл зависимостей в контейнер
-COPY config/requirements.txt /app/
+COPY  config/requirements.txt /app/
 
 
 # Добавьте статические файлы в контейнер
@@ -21,7 +21,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Копируем весь проект в контейнер
 COPY . /app/
 # Запуск команды collectstatic
-RUN python manage.py collectstatic --noinput
+RUN python manage.py collectstatic --noinput 
 
 # Открываем порт 8000 для внешнего доступа
 EXPOSE 8000
